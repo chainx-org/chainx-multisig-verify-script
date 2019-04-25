@@ -1,7 +1,7 @@
 const bitcoin = require("bitcoinjs-lib");
 const fetch = require("node-fetch");
 
-const { privateKey, multisigAddress, redeemScriptHex, toSignRawTransactionHex, fee } = require("./config")
+const { privateKey, multisigAddress, redeemScriptHex, toSignRawTransactionHex, fee, amount, targetAddress} = require("./config")
 const redeemScript = Buffer.from(redeemScriptHex, "hex");
 
 const network = bitcoin.networks.testnet;
@@ -27,7 +27,7 @@ async function compose() {
   } else {
     txb = new bitcoin.TransactionBuilder(network);
     const allUnspents = await getUnspentsFromApi(multisigAddress);
-    const targetUnspent = allUnspents.find(utxo => utxo.amount > fee);
+    const targetUnspent = allUnspents.find(utxo => utxo.amount > fee + amount);
     if (!targetUnspent) {
       throw new Error(
         `${multisigAddress} has no utxo whose amount is greater than 10000 satoshi`
@@ -35,8 +35,11 @@ async function compose() {
     }
 
     txb.addInput(targetUnspent.txid, targetUnspent.vout);
-    const change = targetUnspent.amount - fee;
-    txb.addOutput(multisigAddress, change);
+    const change = targetUnspent.amount - fee - amount;
+    txb.addOutput(targetAddress, amount);
+	if (change > 0) {
+		txb.addOutput(multisigAddress, change);
+	}
   }
 
   const keyPair = bitcoin.ECPair.fromWIF(privateKey, network);
