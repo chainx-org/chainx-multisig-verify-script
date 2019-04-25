@@ -3,6 +3,11 @@ Prerequisite
 
 Install `Node.js` and `Yarn`.
 
+Generate private&public key
+---
+1. Install dependencies: `yarn`.
+2. `yarn generate`.
+
 How to run
 ---
 
