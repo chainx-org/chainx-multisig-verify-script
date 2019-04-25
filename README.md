@@ -25,7 +25,7 @@ Config clarification
 * toSignRawTransactionHex: fill this part if you need to sign the transaction other trustee sent you.
 * fee: the transaction fee. 
 
-Ｇenerate new btc address
+Generate new btc address
 --
 ```
 $ node generate.js
