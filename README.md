@@ -24,14 +24,16 @@ Config clarification
 * redeemScriptHex: utxo redeem script hex of the muitisig address.
 * toSignRawTransactionHex: fill this part if you need to sign the transaction other trustee sent you.
 * fee: the transaction fee. 
+* targetAddress: address for accepting transfer.
+* amount:transfer amount.
 
 Generate new btc address
 --
 ```
 $ node generate.js
-reult:
-private key(WIF): cUTeLjQwyEafGsHYrYBXsffp8ghuhvA5CWsSUUXTbhyf8t65kfyz
-public key: 0268fe376b3f7ce80593675fe39ab500b869c7b33477727725ec761bc58ee8dfee
+result:
+private key(WIF): cUTeLjQwyEafGsHYrYBXsffp8ghuhvA5CWsSaaaaaaaa65kfyz
+public key: 0268fe376b3f7ce80593675fe39ab500b869c7aaaaaaa5ec761bc58ee8dfee
 address: mqRqtEnygkiUDHH5wXH5Vrb36MJeKGtyzj
 ```
 
