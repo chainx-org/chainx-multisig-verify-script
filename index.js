@@ -21,7 +21,7 @@ async function compose() {
   let txb;
   if (toSignRawTransactionHex) {
     txb = bitcoin.TransactionBuilder.fromTransaction(
-      bitcoin.Transaction.fromHex(rawTx),
+      bitcoin.Transaction.fromHex(toSignRawTransactionHex),
       network
     );
   } else {
