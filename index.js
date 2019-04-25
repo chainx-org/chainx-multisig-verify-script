@@ -26,6 +26,8 @@ async function compose() {
     );
   } else {
     txb = new bitcoin.TransactionBuilder(network);
+    txb.setVersion(1);
+
     const allUnspents = await getUnspentsFromApi(multisigAddress);
     const targetUnspent = allUnspents.find(utxo => utxo.amount > fee + amount);
     if (!targetUnspent) {
