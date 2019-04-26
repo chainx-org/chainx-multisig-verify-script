@@ -1,7 +1,15 @@
 const bitcoin = require("bitcoinjs-lib");
 const fetch = require("node-fetch");
 
-const { privateKey, multisigAddress, redeemScriptHex, toSignRawTransactionHex, fee, amount, targetAddress } = require("./config")
+const {
+  privateKey,
+  multisigAddress,
+  redeemScriptHex,
+  toSignRawTransactionHex,
+  fee,
+  amount,
+  targetAddress
+} = require("./config");
 const redeemScript = Buffer.from(redeemScriptHex, "hex");
 
 const network = bitcoin.networks.testnet;
@@ -32,7 +40,8 @@ async function compose() {
     const targetUnspent = allUnspents.find(utxo => utxo.amount >= fee + amount);
     if (!targetUnspent) {
       throw new Error(
-        `${multisigAddress} has no utxo whose amount is greater than ${fee + amount} satoshi`
+        `${multisigAddress} has no utxo whose amount is greater than ${fee +
+          amount} satoshi`
       );
     }
 
@@ -51,10 +60,12 @@ async function compose() {
 
   try {
     rawTransaction = txb.build().toHex();
-    console.log("Following transaction is fully signed:")
+    console.log("Following transaction is fully signed:");
   } catch (e) {
     rawTransaction = txb.buildIncomplete().toHex();
-    console.log("Broadcast the following raw transaction hex to others who haven't sign it:");
+    console.log(
+      "Broadcast the following raw transaction hex to others who haven't sign it:"
+    );
   }
 
   console.log(rawTransaction);
