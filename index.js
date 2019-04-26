@@ -29,7 +29,7 @@ async function compose() {
     txb.setVersion(1);
 
     const allUnspents = await getUnspentsFromApi(multisigAddress);
-    const targetUnspent = allUnspents.find(utxo => utxo.amount > fee + amount);
+    const targetUnspent = allUnspents.find(utxo => utxo.amount >= fee + amount);
     if (!targetUnspent) {
       throw new Error(
         `${multisigAddress} has no utxo whose amount is greater than 10000 satoshi`
