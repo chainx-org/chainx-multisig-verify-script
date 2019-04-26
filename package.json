@@ -9,6 +9,7 @@
   "devDependencies": {
     "husky": "^2.1.0",
     "prettier": "1.17.0",
+    "lint-staged": "^8.1.4",
     "pretty-quick": "^1.10.0"
   },
   "husky": {
@@ -19,5 +20,11 @@
   "dependencies": {
     "bitcoinjs-lib": "^5.0.2",
     "node-fetch": "^2.3.0"
+  },
+  "lint-staged": {
+    "*.{js,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
