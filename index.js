@@ -58,14 +58,17 @@ async function compose() {
 
   let rawTransaction;
 
-  try {
-    rawTransaction = txb.build().toHex();
-    console.log("Following transaction is fully signed:");
-  } catch (e) {
+  const { signatures, maxSignatures } = txb.__INPUTS[0];
+  const signedCount = signatures.filter(sig => typeof sig !== "undefined")
+    .length;
+  if (signedCount < maxSignatures) {
     rawTransaction = txb.buildIncomplete().toHex();
     console.log(
       "Broadcast the following raw transaction hex to others who haven't sign it:"
     );
+  } else {
+    rawTransaction = txb.build().toHex();
+    console.log("Following transaction is fully signed:");
   }
 
   console.log(rawTransaction);
