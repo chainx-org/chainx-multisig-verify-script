@@ -25,6 +25,22 @@ async function getUnspentsFromApi(address) {
   }));
 }
 
+function filterUnspentsByAmount(unspents, amount) {
+  const nonZeroUnspents = unspents.filter(utxo => utxo.amount > 0);
+
+  const result = [];
+  let sum = 0;
+  for (let utxo of nonZeroUnspents) {
+    result.push(utxo);
+    sum += utxo.amount;
+    if (sum > amount) {
+      break;
+    }
+  }
+
+  return [sum < amount ? [] : result, sum];
+}
+
 async function compose() {
   let txb;
   if (toSignRawTransactionHex) {
@@ -37,16 +53,18 @@ async function compose() {
     txb.setVersion(1);
 
     const allUnspents = await getUnspentsFromApi(multisigAddress);
-    const targetUnspent = allUnspents.find(utxo => utxo.amount >= fee + amount);
-    if (!targetUnspent) {
-      throw new Error(
-        `${multisigAddress} has no utxo whose amount is greater than ${fee +
-          amount} satoshi`
-      );
+    const [targetUnspents, sum] = filterUnspentsByAmount(
+      allUnspents,
+      fee + amount
+    );
+    if (targetUnspents.length <= 0) {
+      throw new Error(`${multisigAddress} has no enough unspents`);
     }
 
-    txb.addInput(targetUnspent.txid, targetUnspent.vout);
-    const change = targetUnspent.amount - fee - amount;
+    for (let unspent of targetUnspents) {
+      txb.addInput(unspent.txid, unspent.vout);
+    }
+    const change = sum - fee - amount;
     txb.addOutput(targetAddress, amount);
     if (change > 0) {
       txb.addOutput(multisigAddress, change);
