@@ -18,6 +18,10 @@ async function getUnspentsFromApi(address) {
   const url = `https://api.blockcypher.com/v1/btc/test3/addrs/${address}?unspentOnly=true&confirmations=1`;
   const res = await fetch(url);
   const response = await res.json();
+  if (response.error) {
+    console.error(`api error: ${response.error}`);
+    throw new Error(response.error);
+  }
   return (response.txrefs || []).map(utxo => ({
     txid: utxo.tx_hash,
     vout: utxo.tx_output_n,
