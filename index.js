@@ -77,8 +77,7 @@ async function compose() {
   let rawTransaction;
 
   const { signatures, maxSignatures } = txb.__INPUTS[0];
-  const signedCount = signatures.filter(sig => typeof sig !== "undefined")
-    .length;
+  const signedCount = signatures.filter(sig => typeof sig !== "object").length;
   if (signedCount < maxSignatures) {
     rawTransaction = txb.buildIncomplete().toHex();
     console.log(
