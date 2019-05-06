@@ -72,7 +72,9 @@ async function compose() {
   }
 
   const keyPair = bitcoin.ECPair.fromWIF(privateKey, network);
-  txb.sign(0, keyPair, redeemScript);
+  for (let i = 0; i < txb.__INPUTS.length; i++) {
+    txb.sign(i, keyPair, redeemScript);
+  }
 
   let rawTransaction;
 
