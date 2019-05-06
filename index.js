@@ -15,12 +15,12 @@ const redeemScript = Buffer.from(redeemScriptHex, "hex");
 const network = bitcoin.networks.testnet;
 
 async function getUnspentsFromApi(address) {
-  const url = `https://api.chainx.org/bitx/testnet/${address}/utxos`;
+  const url = `https://api.blockcypher.com/v1/btc/test3/addrs/${address}?unspentOnly=true&confirmations=1`;
   const res = await fetch(url);
-  const utxos = await res.json();
-  return utxos.map(utxo => ({
-    txid: utxo.mintTxid,
-    vout: utxo.mintIndex,
+  const response = await res.json();
+  return (response.txrefs || []).map(utxo => ({
+    txid: utxo.tx_hash,
+    vout: utxo.tx_output_n,
     amount: utxo.value
   }));
 }
