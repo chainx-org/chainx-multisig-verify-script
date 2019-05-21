@@ -1,6 +1,7 @@
 const bitcoin = require("bitcoinjs-lib");
 
-const network = bitcoin.networks.testnet;
+// const network = bitcoin.networks.testnet;
+const network = bitcoin.networks.bitcoin;
 async function generate() {
   const keyPair = bitcoin.ECPair.makeRandom({ network, compressed: true });
   const wif = keyPair.toWIF();
