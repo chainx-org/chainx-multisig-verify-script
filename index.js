@@ -16,7 +16,7 @@ const redeemScript = Buffer.from(redeemScriptHex, "hex");
 const network = bitcoin.networks.bitcoin;
 
 async function getUnspentsFromApi(address) {
-  const url = `https://api.blockcypher.com/v1/btc/main/addrs/${address}?unspentOnly=true&confirmations=1`;
+  const url = `https://api.blockcypher.com/v1/btc/main/addrs/${address}?unspentOnly=true&confirmations=1&limit=800`;
   const res = await fetch(url);
   const response = await res.json();
   if (response.error) {
@@ -31,14 +31,18 @@ async function getUnspentsFromApi(address) {
 }
 
 function filterUnspentsByAmount(unspents, amount) {
-  const nonZeroUnspents = unspents.filter(utxo => utxo.amount > 0);
-
+  let nonZeroUnspents = unspents.filter(utxo => utxo.amount > 0);
+  nonZeroUnspents.sort(function(a, b) {
+    return b.amount - a.amount;
+  });
   const result = [];
   let sum = 0;
   for (let utxo of nonZeroUnspents) {
     result.push(utxo);
+    console.log(utxo.amount);
     sum += utxo.amount;
-    if (sum > amount) {
+    if (sum >= amount) {
+      console.log("compose utxo count is", result.length);
       break;
     }
   }
